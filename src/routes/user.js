@@ -5,8 +5,7 @@ const UserModel = require('../models/user_model');
 router.post('/api/exercise/new-user', (req, res) => {
   const username = req.body.username;
   if (username === '') {
-    console.log('please enter username')
-    res.json({ error: 'empty username field' })
+    res.json({ error: 'empty username field in request\'s body' })
     return
   }
 
@@ -27,7 +26,12 @@ router.post('/api/exercise/new-user', (req, res) => {
     })
 });
 
-
+router.get('/api/exercise/users', (req, res) => {
+  UserModel.find({}, '_id username')
+    .then(doc => {
+      res.json(doc)
+    })
+})
 
 
 
