@@ -9,27 +9,28 @@ const USER_NAME = 'username'
 const DESCRIPTION = 'description'
 const DURATION = 'duration'
 const DATE = 'date'
+const ERROR = 'error'
 
 // create new user
 router.post('/api/exercise/new-user', (req, res) => {
-  const username = req.body.username;
+  const username = req.body[USER_NAME];
   if (username === '') {
-    res.status(400).json({ error: 'empty username field in request\'s body' })
+    res.status(400).json({ [ERROR]: 'empty username field in request\'s body' })
     return
   }
 
-  UserModel.findOne({ username })
+  UserModel.findOne({ [USER_NAME]: username })
     .then(doc => {
       if (!doc) {
-        new UserModel({ username }).save()
+        new UserModel({ [USER_NAME]: username }).save()
           .then(doc => {
-            res.json({ username: doc.username, _id: doc._id })
+            res.json({ [USER_NAME]: doc[USER_NAME], [_ID]: doc[_ID] })
           })
           .catch(err => {
             sendInternalError(err, res);
           })
       } else {
-        res.json({ error: 'Username already taken' })
+        res.json({ [ERROR]: 'Username already taken' })
       }
     })
 });
@@ -56,14 +57,14 @@ router.post('/api/exercise/add', (req, res) => {
   })
 
   if (missing.length > 0) {
-    res.status(400).json({ error: 'required fields missing', missing })
+    res.status(400).json({ [ERROR]: 'required fields missing', missing })
     return
   }
 
   // duration validation
   const duration = parseFloat(req.body[DURATION])
   if ((duration < 0) || !Number.isInteger(duration) || (duration === NaN)) {
-    res.status(400).json({ error: 'field duration must be a positive integer' })
+    res.status(400).json({ [ERROR]: 'field duration must be a positive integer' })
     return
   }
 
@@ -71,7 +72,7 @@ router.post('/api/exercise/add', (req, res) => {
   if (bodyKeys.includes(DATE)) {
     // check for valid date
     if (!validateDate(req.body[DATE], 'boolean', 'yyyy-mm-dd')) {
-      res.status(400).json({ error: 'invalid date' })
+      res.status(400).json({ [ERROR]: 'invalid date' })
       return
     }
   } else {
@@ -93,8 +94,7 @@ router.post('/api/exercise/add', (req, res) => {
       res.json(doc)
     })
     .catch(err => {
-      console.log('findByIdAndUpdate error', err)
-      console.log(' - - - - - end off error - - - - - ');
+      sendInternalError(res, err)
     })
 
   //
