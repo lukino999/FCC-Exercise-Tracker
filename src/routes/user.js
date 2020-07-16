@@ -10,6 +10,7 @@ const DESCRIPTION = 'description'
 const DURATION = 'duration'
 const DATE = 'date'
 const ERROR = 'error'
+const LOG = 'log'
 
 // create new user
 router.post('/api/exercise/new-user', (req, res) => {
@@ -88,7 +89,7 @@ router.post('/api/exercise/add', (req, res) => {
   const exerciseKeys = [DESCRIPTION, DURATION, DATE]
   exerciseKeys.forEach(k => { newExercise[k] = req.body[k] })
   UserModel.findByIdAndUpdate(req.body[USER_ID],
-    { '$push': { 'log': newExercise } },
+    { '$push': { [LOG]: newExercise } },
     { 'new': true })
     .then(doc => {
       res.json(doc)
@@ -100,10 +101,39 @@ router.post('/api/exercise/add', (req, res) => {
   //
 })
 
+// get exercise log for iserId
+router.get(`/api/exercise/log`, (req, res) => {
+
+  console.log('req.query', req.query)
+  const userId = req.query[USER_ID]
+  if (userId == '') {
+    res.status(400).json({ [ERROR]: 'userId required' })
+    return
+  }
+
+  UserModel.findById(userId)
+    .then(doc => {
+      if (!doc) {
+        res.status(400).json({ [ERROR]: 'unknown userId' })
+      } else {
+        res.json({
+          [_ID]: doc[_ID],
+          [USER_NAME]: doc[USER_NAME],
+          [LOG]: doc[LOG]
+        })
+      }
+    })
+    .catch(err => {
+      sendInternalError(res, err)
+    })
+})
+
 
 module.exports = router;
 
 function sendInternalError(err, res) {
+  console.log(' - - - - - - - send internal error - - - - - - ');
   console.log(err);
+  console.log(' - - - - - - end of internal error - - - - - - ');
   res.status(500).json({ error: err });
 }
