@@ -6,6 +6,11 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const userRoute = require('./routes/user')
 
+app.use((req, res, next) => {
+  console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`);
+  next();
+})
+
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }))
