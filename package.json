@@ -2,9 +2,9 @@
 	"name": "fcc-exercise-tracker",
 	"version": "0.1.0",
 	"description": "A REST API project, part of Free Code Camp's curriculum",
-	"main": "server.js",
+	"main": "src/index.js",
 	"scripts": {
-		"start": "node server.js",
+		"start": "node src/index.js",
 		"nodemon": "nodemon ./"
 	},
 	"dependencies": {
@@ -19,12 +19,11 @@
 		"node": "10.16.3"
 	},
 	"repository": {
-		"url": "https://gomix.com/#!/project/welcome-project"
+		"url": "https://github.com/lukino999/FCC-Exercise-Tracker/commits/master"
 	},
 	"license": "MIT",
 	"keywords": [
 		"node",
-		"gomix",
 		"express"
 	],
 	"devDependencies": {

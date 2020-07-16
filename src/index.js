@@ -1,25 +1,21 @@
+require('dotenv').config();
 const express = require('express')
 const app = express()
+const path = require('path');
 const bodyParser = require('body-parser')
-require('dotenv').config();
-
 const cors = require('cors')
-
-const mongoose = require('mongoose')
-mongoose.connect(process.env.DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+const userRoute = require('./routes/user')
 
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(userRoute);
 
 
 app.use(express.static('public'))
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')
+  res.sendFile(path.join(__dirname, '../views/index.html'));
 });
 
 
