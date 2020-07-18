@@ -218,6 +218,7 @@ router.get('/api/exercise/log', (req, res) => {
         res.json({
           [_ID]: doc[_ID],
           [USER_NAME]: doc[USER_NAME],
+          count: doc[LOG].length,
           [LOG]: doc[LOG]
         })
       }
