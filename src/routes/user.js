@@ -78,21 +78,21 @@ router.post('/api/exercise/add', (req, res) => {
 
   // date 
   console.log('body[DATE]', body[DATE])
-  if (body[DATE] !== null) {
-    // check for valid date
-    if (!validateDate(req.body[DATE], 'boolean', 'yyyy-mm-dd')) {
-      res.status(400).json({ [ERROR]: 'invalid date' })
-      return
-    }
-  }
   if ((body[DATE] === null) || (body[DATE] === '') || (body[DATE] === undefined)) {
-    console.log('date is null - creating new Date');
+    console.log(' - - creating new Date');
     const now = new Date();
     let month = now.getMonth();
     month = month > 9 ? month : `0${month}`
     let day = now.getDate();
     day = day > 9 ? day : `0${day}`
     body[DATE] = `${now.getFullYear()}-${month}-${day}`
+  }
+
+  // check for valid date
+  if (!validateDate(req.body[DATE], 'boolean', 'yyyy-mm-dd')) {
+    console.log(' - - invalid date');
+    res.status(400).json({ [ERROR]: 'invalid date' })
+    return
   }
 
   const newExercise = {}
