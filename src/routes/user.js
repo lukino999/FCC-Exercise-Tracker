@@ -31,7 +31,7 @@ router.post('/api/exercise/new-user', (req, res) => {
       if (!doc) {
         new UserModel({ [USER_NAME]: username }).save()
           .then(doc => {
-            res.json({ [USER_NAME]: doc[USER_NAME], [_ID]: doc[_ID] })
+            res.status(201).json({ [USER_NAME]: doc[USER_NAME], [_ID]: doc[_ID] })
           })
           .catch(err => {
             sendInternalError(err, res);
@@ -101,7 +101,7 @@ router.post('/api/exercise/add', (req, res) => {
     .then(doc => {
       console.log('doc', doc);
       if (doc) {
-        res.json(doc)
+        res.status(201).json(doc)
       } else {
         res.status(400).json({ [ERROR]: UNKNOWN_USER_ID })
       }
