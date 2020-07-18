@@ -7,7 +7,7 @@ mongoose.connect(process.env.DB_URI, {
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },
-  log: [Object]
+  log: [{ description: String, duration: Number, date: Date }]
 });
 
 module.exports = mongoose.model('User', UserSchema);
