@@ -178,8 +178,14 @@ router.get('/api/exercise/log', (req, res) => {
 
   const limit = parseFloat(req.query[LIMIT])
 
+
   if (limit) {
-    pipeline.push({ $limit: limit + extraLimit })
+    if ((limit < 1) || !Number.isInteger(limit)) {
+      res.status(400).json({ [ERROR]: 'field \'limit\' must be a positive integer' })
+      return
+    } else {
+      pipeline.push({ $limit: limit + extraLimit })
+    }
   }
 
   pipeline.push({
@@ -203,11 +209,6 @@ router.get('/api/exercise/log', (req, res) => {
     }
   )
 
-
-
-  // res.json(pipeline)
-  // return
-
   UserModel.aggregate(pipeline)
     .then(docs => {
       if (docs.length == 0) {
@@ -225,7 +226,6 @@ router.get('/api/exercise/log', (req, res) => {
       sendInternalError(res, err)
     })
 })
-
 
 module.exports = router;
 
