@@ -58,11 +58,6 @@ router.post('/api/exercise/add', (req, res) => {
   const body = req.body
   const bodyKeys = Object.keys(body)
 
-  bodyKeys.forEach(k => {
-    console.log(k, body[k], typeof k)
-  })
-  console.log('\n');
-
   const requiredKeys = [USER_ID, DESCRIPTION, DURATION]
   const missing = []
 
@@ -71,7 +66,6 @@ router.post('/api/exercise/add', (req, res) => {
   })
 
   if (missing.length > 0) {
-    console.log({ [ERROR]: 'required fields missing', missing });
     res.status(400).json({ [ERROR]: 'required fields missing', missing })
     return
   }
@@ -79,25 +73,19 @@ router.post('/api/exercise/add', (req, res) => {
   // duration validation
   const duration = parseFloat(body[DURATION])
   if ((duration < 0) || !Number.isInteger(duration) || (duration === NaN)) {
-    console.log({ [ERROR]: 'field duration must be a positive integer' });
     res.status(400).json({ [ERROR]: 'field duration must be a positive integer' })
     return
   }
 
   // date 
   if ((body[DATE] === null) || (body[DATE] === '') || (body[DATE] === undefined)) {
-    console.log(' - - creating new Date\n');
     const now = new Date();
     let month = now.getMonth() + 1
     month = month > 9 ? month : `0${month}`
     let day = now.getDate();
     day = day > 9 ? day : `0${day}`
     body[DATE] = `${now.getFullYear()}-${month}-${day}`
-  }
-
-  // check for valid date
-  if (!validateDate(req.body[DATE], 'boolean', 'yyyy-mm-dd')) {
-    console.log(' - - invalid date');
+  } else if (!validateDate(req.body[DATE], 'boolean', 'yyyy-mm-dd')) {
     res.status(400).json({ [ERROR]: 'invalid date' })
     return
   }
@@ -106,8 +94,6 @@ router.post('/api/exercise/add', (req, res) => {
   const exerciseKeys = [DESCRIPTION, DURATION, DATE]
   exerciseKeys.forEach(k => { newExercise[k] = body[k] })
 
-  console.log(' - - sending:\n', body)
-  console.log(' \n')
 
   UserModel.findByIdAndUpdate(body[USER_ID],
     { $push: { [LOG]: newExercise } },
@@ -124,11 +110,8 @@ router.post('/api/exercise/add', (req, res) => {
           [DURATION]: parseInt(body[DURATION]),
           [DESCRIPTION]: body[DESCRIPTION]
         }
-        console.log('- - received\n', resJson)
-        console.log(' \n');
         res.status(201).json(resJson)
       } else {
-        console.log({ [ERROR]: UNKNOWN_USER_ID })
         res.status(400).json({ [ERROR]: UNKNOWN_USER_ID })
       }
     })
@@ -238,11 +221,9 @@ router.get('/api/exercise/log', (req, res) => {
   UserModel.aggregate(pipeline)
     .then(docs => {
       if (docs.length == 0) {
-        console.log('unkown userId')
         res.status(400).json({ [ERROR]: 'unknown userId' })
       } else {
         const doc = docs[0]
-        console.log('get log\n', doc);
         res.json({
           [_ID]: doc[_ID],
           [USER_NAME]: doc[USER_NAME],
