@@ -88,7 +88,7 @@ router.post('/api/exercise/add', (req, res) => {
   if ((body[DATE] === null) || (body[DATE] === '') || (body[DATE] === undefined)) {
     console.log(' - - creating new Date\n');
     const now = new Date();
-    let month = now.getMonth();
+    let month = now.getMonth() + 1
     month = month > 9 ? month : `0${month}`
     let day = now.getDate();
     day = day > 9 ? day : `0${day}`
@@ -114,14 +114,17 @@ router.post('/api/exercise/add', (req, res) => {
     { new: true, useFindAndModify: false })
     .then(doc => {
       if (doc) {
+
+        const d = getFormattedDate(doc[LOG][doc[LOG].length - 1][DATE])
+
         const resJson = {
           [_ID]: doc[_ID],
           [USER_NAME]: doc[USER_NAME],
-          [DATE]: body[DATE],
+          [DATE]: d,
           [DURATION]: parseInt(body[DURATION]),
           [DESCRIPTION]: body[DESCRIPTION]
         }
-        console.log('- - add exercise\n', resJson)
+        console.log('- - received\n', resJson)
         console.log(' \n');
         res.status(201).json(resJson)
       } else {
@@ -260,4 +263,11 @@ function sendInternalError(res, err) {
   console.log(err);
   console.log(' - - - - - - end of internal error - - - - - - ');
   res.status(500).send(err);
+}
+
+function getFormattedDate(d) {
+  const date = new Date(d)
+  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.getMonth()]
+  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()]
+  return `${day} ${month} ${date.getDate()} ${date.getFullYear()}`
 }
