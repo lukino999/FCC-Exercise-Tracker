@@ -99,7 +99,6 @@ router.post('/api/exercise/add', (req, res) => {
     { $push: { [LOG]: newExercise } },
     { new: true, useFindAndModify: false })
     .then(doc => {
-      console.log('doc', doc);
       if (doc) {
         res.status(201).json(doc)
       } else {
