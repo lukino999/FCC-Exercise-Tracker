@@ -77,13 +77,16 @@ router.post('/api/exercise/add', (req, res) => {
   }
 
   // date 
+  console.log('body[DATE]', body[DATE])
   if (body[DATE] !== null) {
     // check for valid date
     if (!validateDate(req.body[DATE], 'boolean', 'yyyy-mm-dd')) {
       res.status(400).json({ [ERROR]: 'invalid date' })
       return
     }
-  } else {
+  }
+  if ((body[DATE] === null) || (body[DATE] === '')) {
+    console.log('date is null - creating new Date');
     const now = new Date();
     let month = now.getMonth();
     month = month > 9 ? month : `0${month}`
@@ -104,7 +107,13 @@ router.post('/api/exercise/add', (req, res) => {
     .then(doc => {
       if (doc) {
         console.log('add exercise\n', doc)
-        res.status(201).json(doc)
+        res.status(201).json({
+          [_ID]: doc[_ID],
+          [USER_NAME]: doc[USER_NAME],
+          [DATE]: body[DATE],
+          [DURATION]: parseInt(body[DURATION]),
+          [DESCRIPTION]: body[DESCRIPTION]
+        })
       } else {
         console.log(doc)
         res.status(400).json({ [ERROR]: UNKNOWN_USER_ID })
