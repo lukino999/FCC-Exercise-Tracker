@@ -15,6 +15,8 @@ const LOG = 'log'
 const LIMIT = 'limit'
 const FROM = 'from'
 const TO = 'to'
+const UNKNOWN_USER_ID = 'unknown userId';
+
 
 // create new user
 router.post('/api/exercise/new-user', (req, res) => {
@@ -74,7 +76,6 @@ router.post('/api/exercise/add', (req, res) => {
     return
   }
 
-  console.log('body', body);
   // date 
   if (body[DATE] !== null) {
     // check for valid date
@@ -98,7 +99,12 @@ router.post('/api/exercise/add', (req, res) => {
     { $push: { [LOG]: newExercise } },
     { new: true, useFindAndModify: false })
     .then(doc => {
-      res.json(doc)
+      console.log('doc', doc);
+      if (doc) {
+        res.json(doc)
+      } else {
+        res.status(400).json({ [ERROR]: UNKNOWN_USER_ID })
+      }
     })
     .catch(err => {
       sendInternalError(res, err)
@@ -205,7 +211,7 @@ router.get('/api/exercise/log', (req, res) => {
   UserModel.aggregate(pipeline)
     .then(docs => {
       if (docs.length == 0) {
-        res.json({ [ERROR]: 'unknown userId' })
+        res.status(400).json({ [ERROR]: 'unknown userId' })
       } else {
         const doc = docs[0]
         res.json({
