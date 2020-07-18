@@ -95,6 +95,9 @@ router.post('/api/exercise/add', (req, res) => {
   const newExercise = {}
   const exerciseKeys = [DESCRIPTION, DURATION, DATE]
   exerciseKeys.forEach(k => { newExercise[k] = body[k] })
+
+  console.log(body)
+
   UserModel.findByIdAndUpdate(body[USER_ID],
     { $push: { [LOG]: newExercise } },
     { new: true, useFindAndModify: false })
