@@ -118,7 +118,7 @@ router.post('/api/exercise/add', (req, res) => {
         const d = getFormattedDate(doc[LOG][doc[LOG].length - 1][DATE])
 
         const resJson = {
-          [_ID]: doc[_ID],
+          [_ID]: String(doc[_ID]),
           [USER_NAME]: doc[USER_NAME],
           [DATE]: d,
           [DURATION]: parseInt(body[DURATION]),
