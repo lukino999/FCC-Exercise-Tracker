@@ -103,8 +103,10 @@ router.post('/api/exercise/add', (req, res) => {
     { new: true, useFindAndModify: false })
     .then(doc => {
       if (doc) {
+        console.log('add exercise\n', doc)
         res.status(201).json(doc)
       } else {
+        console.log(doc)
         res.status(400).json({ [ERROR]: UNKNOWN_USER_ID })
       }
     })
@@ -214,9 +216,11 @@ router.get('/api/exercise/log', (req, res) => {
   UserModel.aggregate(pipeline)
     .then(docs => {
       if (docs.length == 0) {
+        console.log('unkown userId')
         res.status(400).json({ [ERROR]: 'unknown userId' })
       } else {
         const doc = docs[0]
+        console.log('get log\n', doc);
         res.json({
           [_ID]: doc[_ID],
           [USER_NAME]: doc[USER_NAME],
