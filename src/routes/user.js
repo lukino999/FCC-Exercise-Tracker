@@ -85,7 +85,7 @@ router.post('/api/exercise/add', (req, res) => {
       return
     }
   }
-  if ((body[DATE] === null) || (body[DATE] === '')) {
+  if ((body[DATE] === null) || (body[DATE] === '') || (body[DATE] === undefined)) {
     console.log('date is null - creating new Date');
     const now = new Date();
     let month = now.getMonth();
