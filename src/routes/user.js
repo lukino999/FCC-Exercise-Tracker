@@ -268,6 +268,7 @@ function sendInternalError(res, err) {
 function getFormattedDate(d) {
   const date = new Date(d)
   const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.getMonth()]
-  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()]
-  return `${day} ${month} ${date.getDate()} ${date.getFullYear()}`
+  const dayString = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()]
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+  return `${dayString} ${month} ${day} ${date.getFullYear()}`
 }
