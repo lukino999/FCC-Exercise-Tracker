@@ -57,6 +57,12 @@ router.get('/api/exercise/users', (req, res) => {
 router.post('/api/exercise/add', (req, res) => {
   const body = req.body
   const bodyKeys = Object.keys(body)
+
+  bodyKeys.forEach(k => {
+    console.log(k, body[k], typeof k)
+  })
+  console.log('\n');
+
   const requiredKeys = [USER_ID, DESCRIPTION, DURATION]
   const missing = []
 
@@ -65,6 +71,7 @@ router.post('/api/exercise/add', (req, res) => {
   })
 
   if (missing.length > 0) {
+    console.log({ [ERROR]: 'required fields missing', missing });
     res.status(400).json({ [ERROR]: 'required fields missing', missing })
     return
   }
@@ -72,14 +79,14 @@ router.post('/api/exercise/add', (req, res) => {
   // duration validation
   const duration = parseFloat(body[DURATION])
   if ((duration < 0) || !Number.isInteger(duration) || (duration === NaN)) {
+    console.log({ [ERROR]: 'field duration must be a positive integer' });
     res.status(400).json({ [ERROR]: 'field duration must be a positive integer' })
     return
   }
 
   // date 
-  console.log('body[DATE]', body[DATE])
   if ((body[DATE] === null) || (body[DATE] === '') || (body[DATE] === undefined)) {
-    console.log(' - - creating new Date');
+    console.log(' - - creating new Date\n');
     const now = new Date();
     let month = now.getMonth();
     month = month > 9 ? month : `0${month}`
@@ -99,23 +106,26 @@ router.post('/api/exercise/add', (req, res) => {
   const exerciseKeys = [DESCRIPTION, DURATION, DATE]
   exerciseKeys.forEach(k => { newExercise[k] = body[k] })
 
-  console.log(body)
+  console.log(' - - sending:\n', body)
+  console.log(' \n')
 
   UserModel.findByIdAndUpdate(body[USER_ID],
     { $push: { [LOG]: newExercise } },
     { new: true, useFindAndModify: false })
     .then(doc => {
       if (doc) {
-        console.log('add exercise\n', doc)
-        res.status(201).json({
+        const resJson = {
           [_ID]: doc[_ID],
           [USER_NAME]: doc[USER_NAME],
           [DATE]: body[DATE],
           [DURATION]: parseInt(body[DURATION]),
           [DESCRIPTION]: body[DESCRIPTION]
-        })
+        }
+        console.log('- - add exercise\n', resJson)
+        console.log(' \n');
+        res.status(201).json(resJson)
       } else {
-        console.log(doc)
+        console.log({ [ERROR]: UNKNOWN_USER_ID })
         res.status(400).json({ [ERROR]: UNKNOWN_USER_ID })
       }
     })
