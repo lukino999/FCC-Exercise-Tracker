@@ -128,7 +128,7 @@ router.get('/api/exercise/log', (req, res) => {
           count: doc.log.length,
           log: doc.log,
         }
-        console.log(resJson)
+
         res.json(resJson)
       }
     })

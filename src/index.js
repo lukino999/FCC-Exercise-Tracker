@@ -10,6 +10,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+/*
 app.use((req, res, next) => {
   console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`)
   const b = req.body
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
   console.log('\n')
   next()
 })
+*/
 
 app.use(require('./routes/new-user'))
 app.use(require('./routes/users'))

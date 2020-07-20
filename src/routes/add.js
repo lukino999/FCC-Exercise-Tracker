@@ -63,15 +63,13 @@ router.post('/api/exercise/add', (req, res) => {
           duration: parseInt(body.duration),
           description: body.description,
         }
-        console.log(resJson)
-        console.log('\n')
+
         res.status(201).json(resJson)
       } else {
         res.status(400).json({ error: 'unknown user id' })
       }
     })
     .catch((err) => {
-      console.log(err)
       sendInternalError(res, err)
     })
 
