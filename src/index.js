@@ -5,17 +5,20 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-/*
-app.use((req, res, next) => {
-  console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`)
-  next()
-})
-*/
-
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+app.use((req, res, next) => {
+  console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`)
+  const b = req.body
+  if (b) {
+    Object.keys(b).forEach((k) => console.log(k, ':', b[k], '-', typeof k))
+  }
+  console.log('\n')
+  next()
+})
 
 app.use(require('./routes/new-user'))
 app.use(require('./routes/users'))

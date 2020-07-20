@@ -122,12 +122,14 @@ router.get('/api/exercise/log', (req, res) => {
       } else {
         const doc = docs[0]
         doc.log.forEach((e) => (e.date = getFormattedDate(e.date)))
-        res.json({
+        const resJson = {
           _id: doc._id,
           username: doc.username,
           count: doc.log.length,
           log: doc.log,
-        })
+        }
+        console.log(resJson)
+        res.json(resJson)
       }
     })
     .catch((err) => {

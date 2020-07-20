@@ -56,20 +56,22 @@ router.post('/api/exercise/add', (req, res) => {
     .then((doc) => {
       if (doc) {
         const l = doc.log
-        const d = getFormattedDate(l[l.length - 1].date)
         const resJson = {
           id: String(doc._id),
           username: doc.username,
-          date: d,
+          date: getFormattedDate(l[l.length - 1].date),
           duration: parseInt(body.duration),
           description: body.description,
         }
+        console.log(resJson)
+        console.log('\n')
         res.status(201).json(resJson)
       } else {
         res.status(400).json({ error: 'unknown user id' })
       }
     })
     .catch((err) => {
+      console.log(err)
       sendInternalError(res, err)
     })
 
