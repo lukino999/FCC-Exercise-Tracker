@@ -57,7 +57,7 @@ router.post('/api/exercise/add', (req, res) => {
       if (doc) {
         const l = doc.log
         const resJson = {
-          id: String(doc._id),
+          _id: String(doc._id),
           username: doc.username,
           date: getFormattedDate(l[l.length - 1].date),
           duration: parseInt(body.duration),
