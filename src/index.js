@@ -5,10 +5,12 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
+/*
 app.use((req, res, next) => {
   console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`)
   next()
 })
+*/
 
 app.use(cors())
 
