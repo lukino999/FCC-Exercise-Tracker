@@ -1,28 +1,29 @@
-require('dotenv').config();
+require('dotenv').config()
 const express = require('express')
 const app = express()
-const path = require('path');
+const path = require('path')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const userRoute = require('./routes/user')
 
 app.use((req, res, next) => {
-  console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`);
-  next();
+  console.log(`${new Date().toLocaleString()} : ${req.originalUrl}`)
+  next()
 })
 
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(userRoute);
 
+app.use(require('./routes/new-user'))
+app.use(require('./routes/users'))
+app.use(require('./routes/add'))
+app.use(require('./routes/log'))
 
 app.use(express.static('public'))
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/index.html'));
-});
-
+  res.sendFile(path.join(__dirname, '../views/index.html'))
+})
 
 // Not found middleware
 app.use((req, res, next) => {
@@ -44,8 +45,7 @@ app.use((err, req, res, next) => {
     errCode = err.status || 500
     errMessage = err.message || 'Internal Server Error'
   }
-  res.status(errCode).type('txt')
-    .send(errMessage)
+  res.status(errCode).type('txt').send(errMessage)
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
