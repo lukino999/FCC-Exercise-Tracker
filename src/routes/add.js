@@ -36,7 +36,7 @@ router.post('/api/exercise/add', (req, res) => {
     month = month > 9 ? month : `0${month}`
     let day = now.getDate()
     day = day > 9 ? day : `0${day}`
-    body[DATE] = `${now.getFullYear()}-${month}-${day}`
+    body.date = `${now.getFullYear()}-${month}-${day}`
   } else if (!validateDate(req.body.date, 'boolean', 'yyyy-mm-dd')) {
     res.status(400).json({ error: 'invalid date' })
     return
